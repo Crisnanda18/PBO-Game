@@ -60,7 +60,7 @@ public class LoadingScreen implements Screen, InputProcessor {
         gameTitle = new BitmapFontCache(font);
         gameTitle.setColor(Color.YELLOW);
 
-        gameTitle.setText("HERO'S RETURN ANJAYY", 270, 400);
+        gameTitle.setText("HERO'S RETURN ANJAYy cok", 270, 400);
     }
 
     public void update()
