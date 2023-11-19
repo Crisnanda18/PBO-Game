@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import static com.badlogic.gdx.graphics.g3d.particles.ParticleShader.AlignMode.Screen;
-
 public class WelcomeScreen implements Screen, InputProcessor {
     private Stage stage;
     private TextureAtlas atlas;
@@ -33,7 +32,7 @@ public class WelcomeScreen implements Screen, InputProcessor {
     private SpriteBatch batch;
     private Texture background;
 
-    private MyGdxGame parentGame;
+    private final MyGdxGame parentGame;
     private Sprite bg;
 
     private AssetManager assetmanager;
@@ -43,11 +42,11 @@ public class WelcomeScreen implements Screen, InputProcessor {
     private float elapsedTime = 0f;
     private boolean showText = true;
 
-
     public WelcomeScreen(){
         parentGame = (MyGdxGame) Gdx.app.getApplicationListener();
         assetmanager = parentGame.getManager();
         batch = new SpriteBatch();
+
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1600, 900);
@@ -94,23 +93,23 @@ public class WelcomeScreen implements Screen, InputProcessor {
         title.draw(batch);
         batch.end();
 
-        // Update blink every BLINK_INTERVAL seconds
+        // Update blink setiap BLINK_INTERVAL detik
         if (elapsedTime > BLINK_INTERVAL) {
             showText = !showText;
             elapsedTime -= BLINK_INTERVAL;
         }
+        this.update();
     }
 
-    private float calculateBlinkAlpha() {
-        if(System.currentTimeMillis() % 1000 < 500) {
-            return 1; // Full opacity when text is white
-        } else {
-            return 0; // Full transparency when text is black
-        }
-    }
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+
+        if(assetmanager.isFinished()) {
+            this.dispose();
+            parentGame.setGameScreen(new GameScreen());
+            parentGame.setScreen(parentGame.getGameScreen());
+        }
+        return true;
     }
 
     @Override
@@ -125,8 +124,15 @@ public class WelcomeScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+
+        if(assetmanager.isFinished()) {
+            this.dispose();
+            parentGame.setLoadingScreen(new GameScreen());
+            parentGame.setScreen(parentGame.getLoadingScreen());
+        }
+        return true;
     }
+
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -155,7 +161,7 @@ public class WelcomeScreen implements Screen, InputProcessor {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -181,5 +187,13 @@ public class WelcomeScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
 
+    }
+
+    public void update()
+    {
+        if(assetmanager.update())
+        {
+            continueText.setText("Press Anywhere to Start", 600, 100);
+        }
     }
 }
