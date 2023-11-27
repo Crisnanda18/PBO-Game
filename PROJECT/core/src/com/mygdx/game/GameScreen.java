@@ -1,8 +1,6 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -15,18 +13,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
 
 public class GameScreen implements Screen, InputProcessor {
+    private Player1 p1;
+    private Player2 p2;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
     private Table table;
     private BitmapFont white, black;
     private Label heading;
-    private OrthographicCamera camera;
+
+    private OrthographicCamera camera, stageCamera;
     private Viewport viewport;
     private SpriteBatch batch;
     private Texture background;
@@ -39,6 +42,8 @@ public class GameScreen implements Screen, InputProcessor {
     private String[] backgrounds = {"country.png", "rainforest.png"};
     private String currentBackground;
 
+    private InputMultiplexer multiInput;
+
     private final MyGdxGame parentGame;
     private Sprite bg;
 
@@ -50,19 +55,63 @@ public class GameScreen implements Screen, InputProcessor {
         parentGame = (MyGdxGame) Gdx.app.getApplicationListener();
         assetmanager = parentGame.getManager();
         batch = new SpriteBatch();
+
         randomizeBackground();
+
+
+        p1 = new Player1();
+        p1.setX(200);
+        p1.setY(220);
+
+        p2 = new Player2();
+        p2.setX(1000 - 200);
+        p2.setY(220);
+
+        camera = new OrthographicCamera(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
+        camera.setToOrtho(true, MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
+        viewport = new ExtendViewport(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT, camera);
+
+        stageCamera = new OrthographicCamera(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
+        stageCamera.setToOrtho(false, MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
+        stage = new Stage(new FitViewport(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT, stageCamera));
+
+        multiInput = new InputMultiplexer();
+        multiInput.addProcessor(this);
+        multiInput.addProcessor(stage);
+
     }
 
 
 
     @Override
     public boolean keyDown(int keycode) {
-       return false;
+        if (keycode == Input.Keys.W && (p1.getState() != Player1.State.FALL || p1.isInfiniteJump())) {
+            p1.Jump(Player1.State.JUMP);
+        }
+        if (keycode == Input.Keys.D) {
+            p1.setMove(Player1.Direction.RIGHT);
+        }
+        if (keycode == Input.Keys.A) {
+            p1.setMove(Player1.Direction.LEFT);
+        }
+        if (keycode == Input.Keys.CONTROL_LEFT) {
+            p1.doAction(Player1.Action.ATTACK);
+        }
+        if (keycode == Input.Keys.S) {
+            p1.Jump(Player1.State.FALL);
+        }
+       return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return false;
+        if (keycode == Input.Keys.A && p1.getDirection() == Player1.Direction.LEFT)
+            p1.Stop();
+        if (keycode == Input.Keys.D && p1.getDirection() == Player1.Direction.RIGHT)
+            p1.Stop();
+        if (keycode == Input.Keys.W && p1.getState() == Player1.State.JUMP)
+            p1.Jump(Player1.State.FALL);
+        return true;
     }
 
     @Override
@@ -136,6 +185,8 @@ public class GameScreen implements Screen, InputProcessor {
         if (isTextVisible) {
             mapText.draw(batch);
         }
+
+        p1.draw(batch);
 
         batch.end();
 

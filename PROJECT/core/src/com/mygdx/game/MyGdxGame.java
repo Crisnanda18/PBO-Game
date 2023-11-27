@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.sun.org.apache.bcel.internal.generic.PUSH;
 
 public class MyGdxGame extends Game implements InputProcessor {
+    public static final float WORLD_WIDTH = 1600;
+    public static final float WORLD_HEIGHT = 900;
     AssetManager manager = new AssetManager();
 
     WelcomeScreen welcomeScreen;
@@ -28,7 +30,7 @@ public class MyGdxGame extends Game implements InputProcessor {
     }
 
     public void setLoadingScreen(GameScreen gameScreen) {
-this.gameScreen = gameScreen;
+        this.gameScreen = gameScreen;
     }
 
     @Override
@@ -131,10 +133,6 @@ this.gameScreen = gameScreen;
         return false;
     }
 
-    public AssetManager getManager() {
-        return manager;
-    }
-
     public void setManager(AssetManager manager) {
         this.manager = manager;
     }
@@ -163,16 +161,26 @@ this.gameScreen = gameScreen;
         this.font = font;
     }
 
-    public TextureRegion[] animasiSprites (Texture path, int frameCount, float frameDuration) {
+    public static TextureRegion[] CreateAnimationFrames(Texture tex, int frameWidth, int frameHeight, int frameCount, boolean flipx, boolean flipy) {
+        //akan membuat frame animasi dari texture, texture dipotong2 sebesar frameWidth x frameHeight
+        // frame akan diambil dari posisi kiri atas ke kanan bawah
+        TextureRegion[][] tmp = TextureRegion.split(tex, frameWidth, frameHeight);
         TextureRegion[] frames = new TextureRegion[frameCount];
-
-        TextureRegion[][] tmp = TextureRegion.split(path, path.getWidth() / frameCount, path.getHeight());
-
         int index = 0;
-        for (int i = 0; i < frameCount; i++) {
-            frames[index++] = tmp[0][i];
+        int row = tex.getHeight() / frameHeight;
+        int col = tex.getWidth() / frameWidth;
+        for (int i = 0; i < row && index < frameCount; i++) {
+            for (int j = 0; j < col && index < frameCount; j++) {
+                frames[index] = tmp[i][j];
+                frames[index].flip(flipx, flipy);
+                index++;
+            }
         }
         return frames;
     }
+    public AssetManager getManager() {
+        return manager;
+    }
+
 
 }
