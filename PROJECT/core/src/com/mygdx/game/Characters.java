@@ -3,38 +3,29 @@ package com.mygdx.game;
 import com.badlogic.gdx.audio.Sound;
 
 public abstract class Characters {
-    private boolean isInfiniteJump = false;
-    private double HP = 100.0;
-    private double dmg = 10.0;
+    private double health = 100.0;
+    private double damage = 10.0;
     private double ratioHP = 1f;
 
     private float stateTime = 0.0f;
     private float x, y;
+
     private float dx=0, dy=0, speed=200;
-    private Sound takeDamage;
 
-    public boolean isInfiniteJump() {
-        return isInfiniteJump;
+    public double getHealth() {
+        return health;
     }
 
-    public void setInfiniteJump(boolean infiniteJump) {
-        isInfiniteJump = infiniteJump;
+    public void setHealth(double health) {
+        this.health = health;
     }
 
-    public double getHP() {
-        return HP;
+    public double getDamage() {
+        return damage;
     }
 
-    public void setHP(double HP) {
-        this.HP = HP;
-    }
-
-    public double getDmg() {
-        return dmg;
-    }
-
-    public void setDmg(double dmg) {
-        this.dmg = dmg;
+    public void setDamage(double damage) {
+        this.damage = damage;
     }
 
     public double getRatioHP() {
@@ -92,15 +83,4 @@ public abstract class Characters {
     public void setSpeed(float speed) {
         this.speed = speed;
     }
-
-    public Sound getTakeDamage() {
-        return takeDamage;
-    }
-
-    public void setTakeDamage(Sound takeDamage) {
-        this.takeDamage = takeDamage;
-    }
-
-    public boolean canHit (Characters players) {return true;}
-
 }

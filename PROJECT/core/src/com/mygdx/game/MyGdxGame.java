@@ -9,6 +9,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -27,7 +28,7 @@ public class MyGdxGame extends Game implements InputProcessor {
     }
 
     public void setLoadingScreen(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
+this.gameScreen = gameScreen;
     }
 
     @Override
@@ -40,6 +41,26 @@ public class MyGdxGame extends Game implements InputProcessor {
         manager.load("startmusic.mp3",Music.class);
         manager.load("FOREST.mp3", com.badlogic.gdx.audio.Music.class);
         manager.load("COUNTRY.mp3", com.badlogic.gdx.audio.Music.class);
+
+        //load sprite player1
+        manager.load("Sprite1/Attack1.png", Texture.class);
+        manager.load("Sprite1/Attack2.png", Texture.class);
+        manager.load("Sprite1/Death.png", Texture.class);
+        manager.load("Sprite1/Fall.png", Texture.class);
+        manager.load("Sprite1/Idle.png", Texture.class);
+        manager.load("Sprite1/Jump.png", Texture.class);
+        manager.load("Sprite1/Run.png", Texture.class);
+        manager.load("Sprite1/Take Hit.png", Texture.class);
+
+        //load sprite 2
+        manager.load("Sprite2/Attack1.png", Texture.class);
+        manager.load("Sprite2/Attack2.png", Texture.class);
+        manager.load("Sprite2/Death.png", Texture.class);
+        manager.load("Sprite2/Fall.png", Texture.class);
+        manager.load("Sprite2/Idle.png", Texture.class);
+        manager.load("Sprite2/Jump.png", Texture.class);
+        manager.load("Sprite2/Run.png", Texture.class);
+        manager.load("Sprite2/Take Hit.png", Texture.class);
 
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
@@ -142,5 +163,16 @@ public class MyGdxGame extends Game implements InputProcessor {
         this.font = font;
     }
 
+    public TextureRegion[] animasiSprites (Texture path, int frameCount, float frameDuration) {
+        TextureRegion[] frames = new TextureRegion[frameCount];
+
+        TextureRegion[][] tmp = TextureRegion.split(path, path.getWidth() / frameCount, path.getHeight());
+
+        int index = 0;
+        for (int i = 0; i < frameCount; i++) {
+            frames[index++] = tmp[0][i];
+        }
+        return frames;
+    }
 
 }
