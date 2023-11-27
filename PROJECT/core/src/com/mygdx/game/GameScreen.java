@@ -156,7 +156,7 @@ public class GameScreen implements Screen, InputProcessor {
             parameter.borderColor.add(Color.RED);
             font = generator.generateFont(parameter);
             mapText = new BitmapFontCache(font);
-            mapText.setText("France 476 A.D", 650, 800);
+            mapText.setText("Midsummer Moor \n       476 A.D", 650, 800);
         }
         else {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Redaction-mL8P5.ttf"));
@@ -165,7 +165,7 @@ public class GameScreen implements Screen, InputProcessor {
             parameter.borderColor.add(Color.RED);
             font = generator.generateFont(parameter);
             mapText = new BitmapFontCache(font);
-            mapText.setText("Amazon Forest\n      500 A.D", 650, 800);
+            mapText.setText("Midnight Forest\n       500 A.D", 650, 800);
         }
 
         background = new Texture(currentBackground);
