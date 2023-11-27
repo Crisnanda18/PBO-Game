@@ -306,7 +306,7 @@ public class Player1 extends Characters {
                 if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 9) doAction(Action.NO_ATTACK);
             }
         }
-        batch.draw(currentFrame, getX()-100, getY()-100);
+        batch.draw(currentFrame, getX()-20, getY()-20);
     }
 
     public void update()

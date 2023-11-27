@@ -61,7 +61,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         p1 = new Player1();
         p1.setX(200);
-        p1.setY(220);
+        p1.setY(100);
 
         p2 = new Player2();
         p2.setX(1000 - 200);
@@ -94,7 +94,7 @@ public class GameScreen implements Screen, InputProcessor {
         if (keycode == Input.Keys.A) {
             p1.setMove(Player1.Direction.LEFT);
         }
-        if (keycode == Input.Keys.CONTROL_LEFT) {
+        if (keycode == Input.Keys.SHIFT_LEFT) {
             p1.doAction(Player1.Action.ATTACK);
         }
         if (keycode == Input.Keys.S) {
@@ -175,7 +175,11 @@ public class GameScreen implements Screen, InputProcessor {
         bgmusic.setLooping(true);
         bgmusic.play();
     }
-
+    public void update() {
+        p1.update();
+        camera.update();
+        stageCamera.update();
+    }
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
@@ -187,6 +191,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         p1.draw(batch);
+        this.update();
 
         batch.end();
 
