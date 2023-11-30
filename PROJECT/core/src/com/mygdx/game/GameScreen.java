@@ -20,8 +20,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.Random;
 
 public class GameScreen implements Screen, InputProcessor {
-    private Player1 p1;
-    private Player2 p2;
+    private User1 p1;
+    private User2 p2;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
@@ -59,21 +59,21 @@ public class GameScreen implements Screen, InputProcessor {
         randomizeBackground();
 
 
-        p1 = new Player1();
+        p1 = new User1();
         p1.setX(200);
         p1.setY(100);
 
-        p2 = new Player2();
+        p2 = new User2();
         p2.setX(1000 - 200);
-        p2.setY(220);
+        p2.setY(100);
 
-        camera = new OrthographicCamera(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
-        camera.setToOrtho(true, MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
-        viewport = new ExtendViewport(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT, camera);
+        camera = new OrthographicCamera(1600, 900);
+        camera.setToOrtho(true, 1600, 900);
+        viewport = new ExtendViewport(1600, 900, camera);
 
-        stageCamera = new OrthographicCamera(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
-        stageCamera.setToOrtho(false, MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT);
-        stage = new Stage(new FitViewport(MyGdxGame.WORLD_WIDTH, MyGdxGame.WORLD_HEIGHT, stageCamera));
+        stageCamera = new OrthographicCamera(1600, 900);
+        stageCamera.setToOrtho(false, 1600, 900);
+        stage = new Stage(new FitViewport(1600, 900, stageCamera));
 
         multiInput = new InputMultiplexer();
         multiInput.addProcessor(this);
@@ -85,32 +85,62 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.W && (p1.getState() != Player1.State.FALL || p1.isInfiniteJump())) {
-            p1.Jump(Player1.State.JUMP);
+        //USER1
+        if (keycode == Input.Keys.W && (p1.getState() != User1.State.FALLING || p1.isInfiniteJump())) {
+            p1.userJump(User1.State.JUMPING);
         }
         if (keycode == Input.Keys.D) {
-            p1.setMove(Player1.Direction.RIGHT);
+            p1.userMove(User1.Direction.RIGHT);
         }
         if (keycode == Input.Keys.A) {
-            p1.setMove(Player1.Direction.LEFT);
+            p1.userMove(User1.Direction.LEFT);
         }
-        if (keycode == Input.Keys.SHIFT_LEFT) {
-            p1.doAction(Player1.Action.ATTACK);
+        if (keycode == Input.Keys.SPACE) {
+            p1.userACT(User1.Action.ATTACKING);
         }
         if (keycode == Input.Keys.S) {
-            p1.Jump(Player1.State.FALL);
+            p1.userJump(User1.State.FALLING);
         }
+        //USER2
+        if (keycode == Input.Keys.UP && (p2.getState() != User2.State.FALLING || p2.isInfiniteJump())) {
+            p2.userJump(User2.State.JUMPING);
+        }
+        if (keycode == Input.Keys.DOWN) {
+            p2.userJump(User2.State.FALLING);
+        }
+
+        if (keycode == Input.Keys.RIGHT) {
+            p2.userMove(User2.Direction.RIGHT);
+        }
+        if (keycode == Input.Keys.LEFT) {
+            p2.userMove(User2.Direction.LEFT);
+        }
+        if (keycode == Input.Keys.CONTROL_RIGHT) {
+            p2.userACT(User2.Action.ATTACKING);
+        }
+
+
        return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.A && p1.getDirection() == Player1.Direction.LEFT)
-            p1.Stop();
-        if (keycode == Input.Keys.D && p1.getDirection() == Player1.Direction.RIGHT)
-            p1.Stop();
-        if (keycode == Input.Keys.W && p1.getState() == Player1.State.JUMP)
-            p1.Jump(Player1.State.FALL);
+        //User1
+        if (keycode == Input.Keys.A && p1.getDirection() == User1.Direction.LEFT)
+            p1.StopChar();
+        if (keycode == Input.Keys.D && p1.getDirection() == User1.Direction.RIGHT)
+            p1.StopChar();
+        if (keycode == Input.Keys.W && p1.getState() == User1.State.JUMPING)
+            p1.userJump(User1.State.FALLING);
+
+        //User2
+        if (keycode == Input.Keys.LEFT && p2.getDirection() == User2.Direction.LEFT)
+            p2.StopChar();
+        if (keycode == Input.Keys.RIGHT && p2.getDirection() == User2.Direction.RIGHT)
+            p2.StopChar();
+        if (keycode == Input.Keys.UP && p2.getState() == User2.State.JUMPING)
+            p2.userJump(User2.State.FALLING);
+
         return true;
     }
 
@@ -177,6 +207,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
     public void update() {
         p1.update();
+        p2.update();
         camera.update();
         stageCamera.update();
     }
@@ -191,14 +222,15 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         p1.draw(batch);
+        p2.draw(batch);
         this.update();
 
         batch.end();
 
-        // Use the Timer class to schedule a task that will make the mapText disappear
+
         if (System.currentTimeMillis() - startTime >= 4000 && isTextVisible) {
             isTextVisible = false;
-            // Do any additional actions if needed
+
         }
     }
 

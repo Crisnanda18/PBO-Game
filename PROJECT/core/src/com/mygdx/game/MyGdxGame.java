@@ -16,8 +16,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.sun.org.apache.bcel.internal.generic.PUSH;
 
 public class MyGdxGame extends Game implements InputProcessor {
-    public static final float WORLD_WIDTH = 1600;
-    public static final float WORLD_HEIGHT = 900;
     AssetManager manager = new AssetManager();
 
     WelcomeScreen welcomeScreen;
@@ -153,6 +151,10 @@ public class MyGdxGame extends Game implements InputProcessor {
         this.welcomeScreen = welcomeScreen;
     }
 
+    public AssetManager getManager() {
+        return manager;
+    }
+
     public BitmapFont getFont() {
         return font;
     }
@@ -161,25 +163,27 @@ public class MyGdxGame extends Game implements InputProcessor {
         this.font = font;
     }
 
-    public static TextureRegion[] CreateAnimationFrames(Texture tex, int frameWidth, int frameHeight, int frameCount, boolean flipx, boolean flipy) {
-        //akan membuat frame animasi dari texture, texture dipotong2 sebesar frameWidth x frameHeight
-        // frame akan diambil dari posisi kiri atas ke kanan bawah
-        TextureRegion[][] tmp = TextureRegion.split(tex, frameWidth, frameHeight);
+    public static TextureRegion[] loadFrames(Texture texture, int frameWidth, int frameHeight, int frameCount, boolean flipX, boolean flipY) {
+        TextureRegion[][] tempFrames = splitTexture(texture, frameWidth, frameHeight);
+        return createFrames(tempFrames, frameCount, flipX, flipY);
+    }
+
+    private static TextureRegion[][] splitTexture(Texture texture, int frameWidth, int frameHeight) {
+        return TextureRegion.split(texture, frameWidth, frameHeight);
+    }
+
+    private static TextureRegion[] createFrames(TextureRegion[][] tempFrames, int frameCount, boolean flipX, boolean flipY) {
         TextureRegion[] frames = new TextureRegion[frameCount];
         int index = 0;
-        int row = tex.getHeight() / frameHeight;
-        int col = tex.getWidth() / frameWidth;
-        for (int i = 0; i < row && index < frameCount; i++) {
-            for (int j = 0; j < col && index < frameCount; j++) {
-                frames[index] = tmp[i][j];
-                frames[index].flip(flipx, flipy);
-                index++;
+        for (TextureRegion[] tempFrame : tempFrames) {
+            for (TextureRegion textureRegion : tempFrame) {
+                if (index < frameCount) {
+                    textureRegion.flip(flipX, flipY);
+                    frames[index++] = textureRegion;
+                }
             }
         }
         return frames;
-    }
-    public AssetManager getManager() {
-        return manager;
     }
 
 
