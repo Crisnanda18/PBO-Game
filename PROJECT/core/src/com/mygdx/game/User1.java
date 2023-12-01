@@ -2,20 +2,29 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 
 public class User1 extends Characters {
     public User1() {
+        parentGame = (MyGdxGame) Gdx.app.getApplicationListener();
+        manager = parentGame.getManager();
         this.AnimatePlayer1();
     }
 
+    private User2 p2;
     private MyGdxGame parentGame;
     private GameScreen gameScreen;
 
+    AssetManager manager;
+    private Music hitSound;
     //DEFAULT UNTUK USER 1 (PLAYER 1)
     private Direction animationDirection = Direction.RIGHT;
     private Direction direction = Direction.RIGHT;
@@ -32,20 +41,20 @@ public class User1 extends Characters {
         JUMPING,
         FALLING
     }
+
     enum Action {
         ATTACKING,
         SILENT,
         DAMAGED
-    } enum Direction {
+    }
+
+    enum Direction {
         LEFT,
         RIGHT
     }
 
 
-
-
-    public void AnimatePlayer1()
-    {
+    public void AnimatePlayer1() {
         parentGame = (MyGdxGame) Gdx.app.getApplicationListener();
         AssetManager assetManager = parentGame.getManager();
         gameScreen = parentGame.getGameScreen();
@@ -60,59 +69,59 @@ public class User1 extends Characters {
 
 
         //ketika idle, hadap kanan
-        TextureRegion[] frames = MyGdxGame.loadFrames(idle, idle.getWidth()/10, idle.getHeight(), 10, false, false);
+        TextureRegion[] frames = MyGdxGame.loadFrames(idle, idle.getWidth() / 10, idle.getHeight(), 10, false, false);
         rightIdle = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika idle, hadap kiri
-        frames = MyGdxGame.loadFrames(idle, idle.getWidth()/10, idle.getHeight(), 10, true, false);
+        frames = MyGdxGame.loadFrames(idle, idle.getWidth() / 10, idle.getHeight(), 10, true, false);
         leftIdle = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika jalan, hadap kanan
-        frames = MyGdxGame.loadFrames(run, run.getWidth()/10, run.getHeight(), 10, false, false);
+        frames = MyGdxGame.loadFrames(run, run.getWidth() / 10, run.getHeight(), 10, false, false);
         rightRunning = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika jalan, hadap kiri
-        frames = MyGdxGame.loadFrames(run, run.getWidth()/10, run.getHeight(), 10, true, false);
+        frames = MyGdxGame.loadFrames(run, run.getWidth() / 10, run.getHeight(), 10, true, false);
         leftRunning = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika loncat ke kanan
-        frames = MyGdxGame.loadFrames(jump, jump.getWidth()/3, jump.getHeight(), 3, false, false);
+        frames = MyGdxGame.loadFrames(jump, jump.getWidth() / 3, jump.getHeight(), 3, false, false);
         rightJump = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika loncat ke kiri
-        frames = MyGdxGame.loadFrames(jump, jump.getWidth()/3, jump.getHeight(), 3, true, false);
+        frames = MyGdxGame.loadFrames(jump, jump.getWidth() / 3, jump.getHeight(), 3, true, false);
         leftJump = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika attack ke kanan
-        frames = MyGdxGame.loadFrames(attack1, attack1.getWidth()/4, attack1.getHeight(), 4, false, false);
+        frames = MyGdxGame.loadFrames(attack1, attack1.getWidth() / 4, attack1.getHeight(), 4, false, false);
         rightATK = new Animation<TextureRegion>(0.06f, frames);
 
         //ketika attack ke kiri
-        frames = MyGdxGame.loadFrames(attack1, attack1.getWidth()/4, attack1.getHeight(), 4, true, false);
+        frames = MyGdxGame.loadFrames(attack1, attack1.getWidth() / 4, attack1.getHeight(), 4, true, false);
         leftATK = new Animation<TextureRegion>(0.06f, frames);
 
         //ketika mati hadap kanan
-        frames = MyGdxGame.loadFrames(mati, mati.getWidth()/10, mati.getHeight(), 10, false, false);
+        frames = MyGdxGame.loadFrames(mati, mati.getWidth() / 10, mati.getHeight(), 10, false, false);
         rightDead = new Animation<TextureRegion>(0.09f, frames);
 
         //ketika mati hadap kiri
-        frames = MyGdxGame.loadFrames(mati, mati.getWidth()/10, mati.getHeight(), 10, true, false);
+        frames = MyGdxGame.loadFrames(mati, mati.getWidth() / 10, mati.getHeight(), 10, true, false);
         leftDead = new Animation<TextureRegion>(0.09f, frames);
 
         //kena hit dari kanan
-        frames = MyGdxGame.loadFrames(kena_hit, kena_hit.getWidth()/1, kena_hit.getHeight(), 1, false, false);
+        frames = MyGdxGame.loadFrames(kena_hit, kena_hit.getWidth() / 1, kena_hit.getHeight(), 1, false, false);
         rightDamaged = new Animation<TextureRegion>(0.06f, frames);
 
         //kena hit dari kiri
-        frames = MyGdxGame.loadFrames(kena_hit, kena_hit.getWidth()/1, kena_hit.getHeight(), 1, true, false);
-        leftDamaged= new Animation<TextureRegion>(0.06f, frames);
+        frames = MyGdxGame.loadFrames(kena_hit, kena_hit.getWidth() / 1, kena_hit.getHeight(), 1, true, false);
+        leftDamaged = new Animation<TextureRegion>(0.06f, frames);
 
         //jatuh ke kanan
-        frames = MyGdxGame.loadFrames(fall, fall.getWidth()/3, fall.getHeight(), 3, false, false);
+        frames = MyGdxGame.loadFrames(fall, fall.getWidth() / 3, fall.getHeight(), 3, false, false);
         rightFalling = new Animation<TextureRegion>(0.09f, frames);
 
         //jatuh ke kiri
-        frames = MyGdxGame.loadFrames(fall, fall.getWidth()/3, fall.getHeight(), 3, true, false);
+        frames = MyGdxGame.loadFrames(fall, fall.getWidth() / 3, fall.getHeight(), 3, true, false);
         leftFalling = new Animation<TextureRegion>(0.09f, frames);
     }
 
@@ -134,77 +143,82 @@ public class User1 extends Characters {
             case FALLING:
                 currentFrame = handleFallingState();
                 break;
+        }
+        if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 16) {
+            if (gameScreen.getP1().userHIT(gameScreen.getP2())) {
+                hitSound.play();
+                gameScreen.getP2().userACT(User2.Action.DAMAGED);
+
+            }
+            userACT(Action.SILENT);
+        }
+        if (action == Action.ATTACKING) {
+            currentFrame = handleAttackingState();
+        } else if (action == Action.DAMAGED) {
+            currentFrame = handleDamagedState();
+        }
+
+        if (this.getHP() <= 0) {
+            currentFrame = handleDeadState();
+        }
+
+        batch.draw(currentFrame, getX() - 20, getY() - 20);
     }
 
-    if (action == Action.ATTACKING) {
-        currentFrame = handleAttackingState();
-    } else if (action == Action.DAMAGED) {
-        currentFrame = handleDamagedState();
+    private TextureRegion handleIdleState() {
+        return animationDirection == Direction.LEFT ? leftIdle.getKeyFrame(this.getStateTime(), true) : rightIdle.getKeyFrame(this.getStateTime(), true);
     }
 
-    if (this.getHP() <= 0) {
-        currentFrame = handleDeadState();
+    private TextureRegion handleRunningState() {
+        if (action == Action.ATTACKING) {
+            StopChar();
+        }
+        return animationDirection == Direction.LEFT ? leftRunning.getKeyFrame(this.getStateTime(), true) : rightRunning.getKeyFrame(this.getStateTime(), true);
     }
 
-    batch.draw(currentFrame, getX() - 20, getY() - 20);
-}
+    private TextureRegion handleJumpingState() {
+        return animationDirection == Direction.LEFT ? leftJump.getKeyFrame(this.getStateTime(), true) : rightJump.getKeyFrame(this.getStateTime(), true);
+    }
 
-        private TextureRegion handleIdleState() {
-            return animationDirection == Direction.LEFT ? leftIdle.getKeyFrame(this.getStateTime(), true) : rightIdle.getKeyFrame(this.getStateTime(), true);
-        }
+    private TextureRegion handleFallingState() {
+        return animationDirection == Direction.LEFT ? leftFalling.getKeyFrame(this.getStateTime(), true) : rightFalling.getKeyFrame(this.getStateTime(), true);
+    }
 
-        private TextureRegion handleRunningState() {
-            if (action == Action.ATTACKING) {
-                StopChar();
-            }
-            return animationDirection == Direction.LEFT ? leftRunning.getKeyFrame(this.getStateTime(), true) : rightRunning.getKeyFrame(this.getStateTime(), true);
+    private TextureRegion handleAttackingState() {
+        if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 16) {
+            userACT(Action.SILENT);
         }
+        return animationDirection == Direction.LEFT ? leftATK.getKeyFrame(this.getStateTime(), true) : rightATK.getKeyFrame(this.getStateTime(), true);
+    }
 
-        private TextureRegion handleJumpingState() {
-            return animationDirection == Direction.LEFT ? leftJump.getKeyFrame(this.getStateTime(), true) : rightJump.getKeyFrame(this.getStateTime(), true);
+    private TextureRegion handleDamagedState() {
+        if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 9) {
+            userACT(Action.SILENT);
         }
+        return animationDirection == Direction.LEFT ? leftDamaged.getKeyFrame(this.getStateTime(), true) : rightDamaged.getKeyFrame(this.getStateTime(), true);
+    }
 
-        private TextureRegion handleFallingState() {
-            return animationDirection == Direction.LEFT ? leftFalling.getKeyFrame(this.getStateTime(), true) : rightFalling.getKeyFrame(this.getStateTime(), true);
-        }
+    private TextureRegion handleDeadState() {
+        return animationDirection == Direction.LEFT ? leftDead.getKeyFrame(this.getStateTime(), false) : rightDead.getKeyFrame(this.getStateTime(), false);
+    }
 
-        private TextureRegion handleAttackingState() {
-            if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 16) {
-                userACT(Action.SILENT);
-            }
-            return animationDirection == Direction.LEFT ? leftATK.getKeyFrame(this.getStateTime(), true) : rightATK.getKeyFrame(this.getStateTime(), true);
-        }
-
-        private TextureRegion handleDamagedState() {
-            if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 9) {
-                userACT(Action.SILENT);
-            }
-            return animationDirection == Direction.LEFT ? leftDamaged.getKeyFrame(this.getStateTime(), true) : rightDamaged.getKeyFrame(this.getStateTime(), true);
-        }
-
-        private TextureRegion handleDeadState() {
-            return animationDirection == Direction.LEFT ? leftDead.getKeyFrame(this.getStateTime(), false) : rightDead.getKeyFrame(this.getStateTime(), false);
-        }
-    public void update()
-    {
-        setRatioHP(getHP()/100);
+    public void update() {
+        setRatioHP(getHP() / 100);
         float elapsed = Gdx.graphics.getDeltaTime();
-        this.setStateTime(getStateTime()+elapsed);
+        this.setStateTime(getStateTime() + elapsed);
         if (getHP() > 0) {
 
             setX(getX() + getDx() * getSpeed() * elapsed);
             if (getX() > 1600) {
                 setX(1600);
                 StopChar();
-            }
-            else if (getX() < 0) {
+            } else if (getX() < 0) {
                 setX(0);
                 StopChar();
             } else if (getX() > 1300) {
                 setX(1300);
                 StopChar();
             }
-
 
 
             setY(getY() + getDy() * getSpeed() * elapsed);
@@ -217,10 +231,17 @@ public class User1 extends Characters {
                 this.StopChar();
             }
 
+
         }
 
-    }
 
+     }
+
+    private boolean isOnPlatform(Sprite platform) {
+        float characterBottom = getY();
+        float platformTop = platform.getY() + platform.getHeight();
+        return characterBottom < platformTop && characterBottom > platform.getY();
+    }
 
 
     public void userMove(Direction d) {
@@ -240,7 +261,7 @@ public class User1 extends Characters {
     if (getY() != 140) {
         setDy(state == State.FALLING ? -1 : 1);
     } else {
-        state = State.RUNNING; // update state and animation direction
+        state = State.RUNNING;
     }
 }
 
@@ -296,24 +317,34 @@ public class User1 extends Characters {
     }
 }
 
-
-    public boolean userATK (Characters p2) {
-        if (getHP() > 0) {
-            if (action == Action.SILENT) {
-                return false;
-            }
-            else if (action == Action.ATTACKING) {
-                float jarak = 0;
-                if (animationDirection == Direction.RIGHT) {
-                    jarak = p2.getX() - getX();
-                } else if (animationDirection == Direction.LEFT) {
-                    jarak = getX() - p2.getX();
-                }
-                return jarak <= 100 && jarak > 10 && Math.abs(p2.getY() - getY()) <= 10;
-            }
+    public void loadSound() {
+        if (hitSound != null) {
+            hitSound.stop();
+            hitSound.dispose();
         }
+        hitSound = manager.get("damaged.mp3", Music.class);
+    }
+
+    public boolean userHIT (Characters p2) {
+    if (getHP() <= 0 || action == Action.SILENT) {
         return false;
     }
+    if (action == Action.ATTACKING) {
+        float span = animationDirection == Direction.RIGHT ? p2.getX() - getX() : getX() - p2.getX();
+        if (span <= 140 && span > 10 && Math.abs(p2.getY() - getY()) <= 10) {
+            // p2 mundur kalo ke damaged
+            if (animationDirection == Direction.RIGHT) {
+                gameScreen.getP2().setX(gameScreen.getP2().getX() + 20);
+            } else {
+                gameScreen.getP2().setX(gameScreen.getP2().getX() - 20);
+
+            }
+            hitSound.play();
+            return true;
+        }
+    }
+    return false;
+}
 
    //getter setter
 
@@ -471,6 +502,38 @@ public class User1 extends Characters {
 
     public Animation<TextureRegion> getRunRightFall() {
         return rightFalling;
+    }
+
+    public User2 getP2() {
+        return p2;
+    }
+
+    public void setP2(User2 p2) {
+        this.p2 = p2;
+    }
+
+    public MyGdxGame getParentGame() {
+        return parentGame;
+    }
+
+    public void setParentGame(MyGdxGame parentGame) {
+        this.parentGame = parentGame;
+    }
+
+    public AssetManager getManager() {
+        return manager;
+    }
+
+    public void setManager(AssetManager manager) {
+        this.manager = manager;
+    }
+
+    public Music getHitSound() {
+        return hitSound;
+    }
+
+    public void setHitSound(Music hitSound) {
+        this.hitSound = hitSound;
     }
 
     public void setRunRightFall(Animation<TextureRegion> runRightFall) {

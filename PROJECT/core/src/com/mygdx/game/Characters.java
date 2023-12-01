@@ -102,5 +102,5 @@ public abstract class Characters {
         this.takeDamage = takeDamage;
     }
 
-    public boolean canHit (Characters players) {return true;}
+    public boolean hit (Characters players) {return true;}
 }

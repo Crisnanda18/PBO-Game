@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,11 +11,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class User2 extends Characters {
     public User2() {
+        parentGame = (MyGdxGame) Gdx.app.getApplicationListener();
         this.AnimatePlayer2();
+        assetManager = parentGame.getManager();
     }
 
     private MyGdxGame parentGame;
     private GameScreen gameScreen;
+    private Music hitSound;
+    private AssetManager assetManager;
 
     //DEFAULT UNTUK USER 1 (PLAYER 1)
     private Direction animationDirection = Direction.LEFT;
@@ -134,6 +139,14 @@ public class User2 extends Characters {
             case FALLING:
                 currentFrame = handleFallingState();
                 break;
+        }
+        if (this.getStateTime() >= Gdx.graphics.getDeltaTime() * 16) {
+            if (gameScreen.getP2().userHIT(gameScreen.getP1())) {
+                hitSound.play();
+                gameScreen.getP1().userACT(User1.Action.DAMAGED);
+
+            }
+            userACT(User2.Action.SILENT);
         }
 
         if (action == Action.ATTACKING) {
@@ -295,25 +308,34 @@ public class User2 extends Characters {
             }
         }
     }
-
-
-    public boolean userATK (Characters p2) {
-        if (getHP() > 0) {
-            if (action == Action.SILENT) {
-                return false;
-            }
-            else if (action == Action.ATTACKING) {
-                float jarak = 0;
-                if (animationDirection == Direction.RIGHT) {
-                    jarak = p2.getX() - getX();
-                } else if (animationDirection == Direction.LEFT) {
-                    jarak = getX() - p2.getX();
-                }
-                return jarak <= 100 && jarak > 10 && Math.abs(p2.getY() - getY()) <= 10;
-            }
+    public void loadSound() {
+        if (hitSound != null) {
+            hitSound.stop();
+            hitSound.dispose();
         }
+        hitSound = assetManager.get("damaged.mp3", Music.class);
+    }
+
+    public boolean userHIT (Characters p2) {
+    if (getHP() <= 0 || action == Action.SILENT) {
         return false;
     }
+    if (action == Action.ATTACKING) {
+        float jarak = animationDirection == Direction.RIGHT ? p2.getX() - getX() : getX() - p2.getX();
+        if (jarak <= 140 && jarak > 10 && Math.abs(p2.getY() - getY()) <= 10) {
+            //p1 mundur kalo ke hit
+            if (animationDirection == Direction.RIGHT) {
+                gameScreen.getP1().setX(gameScreen.getP1().getX() + 20);
+            } else {
+                gameScreen.getP1().setX(gameScreen.getP1().getX() - 20);
+            }
+
+            hitSound.play();
+            return true;
+        }
+    }
+    return false;
+}
 
     //getter setter
 
@@ -407,6 +429,30 @@ public class User2 extends Characters {
 
     public Animation<TextureRegion> getRunLeftJump() {
         return leftJump;
+    }
+
+    public MyGdxGame getParentGame() {
+        return parentGame;
+    }
+
+    public void setParentGame(MyGdxGame parentGame) {
+        this.parentGame = parentGame;
+    }
+
+    public Music getHitSound() {
+        return hitSound;
+    }
+
+    public void setHitSound(Music hitSound) {
+        this.hitSound = hitSound;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
+    public void setAssetManager(AssetManager assetManager) {
+        this.assetManager = assetManager;
     }
 
     public void setRunLeftJump(Animation<TextureRegion> runLeftJump) {

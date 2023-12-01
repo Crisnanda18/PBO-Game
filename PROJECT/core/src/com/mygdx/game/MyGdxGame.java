@@ -37,10 +37,17 @@ public class MyGdxGame extends Game implements InputProcessor {
         manager.load("bg-welcome.png", Texture.class);
         manager.load("country.png", Texture.class);
         manager.load("rainforest.png", Texture.class);
+        manager.load("fight-opening.png", Texture.class);
+        manager.load("platform.png", Texture.class);
+
         //loading music bakground
-        manager.load("startmusic.mp3",Music.class);
+        manager.load("FIGHT.mp3",Music.class);
         manager.load("FOREST.mp3", com.badlogic.gdx.audio.Music.class);
         manager.load("COUNTRY.mp3", com.badlogic.gdx.audio.Music.class);
+        manager.load("damaged.mp3", com.badlogic.gdx.audio.Music.class);
+        manager.load("warcry1.mp3", com.badlogic.gdx.audio.Music.class);
+        manager.load("warcry2.mp3", com.badlogic.gdx.audio.Music.class);
+
 
         //load sprite player1
         manager.load("Sprite1/Attack1.png", Texture.class);
