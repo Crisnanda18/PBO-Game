@@ -76,7 +76,7 @@ public class GameScreen implements Screen, InputProcessor {
         p1.setY(100);
 
         p2 = new User2();
-        p2.setX(1000);
+        p2.setX(1100);
         p2.setY(100);
 
         fightSprite.setPosition(400, 300);
@@ -97,21 +97,45 @@ public class GameScreen implements Screen, InputProcessor {
 
     public void createPlatforms() {
     platforms = new Array<>();
-    Sprite platform1 = new Sprite(assetmanager.get("platform.png", Texture.class));
-    platform1.setPosition(200, 200); // Set the position of platform1
-    platforms.add(platform1);
 
-    Sprite platform2 = new Sprite(assetmanager.get("platform.png", Texture.class));
-    platform2.setPosition(750, 380); // Set the position of platform2
-    platforms.add(platform2);
+    if(currentBackground.equals("country.png")) {
+        Sprite platform1 = new Sprite(assetmanager.get("platform.png", Texture.class));
+        platform1.setPosition(400, 200); // Set the position of platform1
+        platforms.add(platform1);
 
-    Sprite platform3 = new Sprite(assetmanager.get("platform.png", Texture.class));
-    platform3.setPosition(1000, 250); // Set the position of platform3
-    platforms.add(platform3);
+        Sprite platform2 = new Sprite(assetmanager.get("platform.png", Texture.class));
+        platform2.setPosition(750, 380); // Set the position of platform2
+        platforms.add(platform2);
 
-    Sprite platform4 = new Sprite(assetmanager.get("platform.png", Texture.class));
-    platform4.setPosition(450, 450); // Set the position of platform4
-    platforms.add(platform4);
+        Sprite platform3 = new Sprite(assetmanager.get("platform.png", Texture.class));
+        platform3.setPosition(1000, 250); // Set the position of platform3
+        platforms.add(platform3);
+
+        Sprite platform4 = new Sprite(assetmanager.get("platform.png", Texture.class));
+        platform4.setPosition(500, 300); // Set the position of platform4
+        platforms.add(platform4);
+
+    }else if (currentBackground.equals("rainforest.png")){
+        Sprite platform5 = new Sprite(assetmanager.get("platform2.png", Texture.class));
+        platform5.setPosition(400, 200); // Set the position of platform5
+        platforms.add(platform5);
+
+        Sprite platform6 = new Sprite(assetmanager.get("platform2.png", Texture.class));
+        platform6.setPosition(920, 320); // Set the position of platform6
+        platforms.add(platform6);
+
+        Sprite platform7 = new Sprite(assetmanager.get("platform2.png", Texture.class));
+        platform7.setPosition(1200, 200); // Set the position of platform7
+        platforms.add(platform7);
+
+        Sprite platform8 = new Sprite(assetmanager.get("platform2.png", Texture.class));
+        platform8.setPosition(200, 280); // Set the position of platform8
+        platforms.add(platform8);
+
+        Sprite platform9 = new Sprite(assetmanager.get("platform2.png", Texture.class));
+        platform9.setPosition(520, 400); // Set the position of platform9
+        platforms.add(platform9);
+    }
 }
 
 

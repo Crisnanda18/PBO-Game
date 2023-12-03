@@ -35,10 +35,11 @@ public class MyGdxGame extends Game implements InputProcessor {
     public void create() {
         //loading aset yang diperlukan
         manager.load("bg-welcome.png", Texture.class);
-        manager.load("country.png", Texture.class);
+        manager.load("c.png", Texture.class);
         manager.load("rainforest.png", Texture.class);
         manager.load("fight-opening.png", Texture.class);
         manager.load("platform.png", Texture.class);
+        manager.load("platform2.png", Texture.class);
 
         //loading music bakground
         manager.load("FIGHT.mp3",Music.class);
