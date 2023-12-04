@@ -18,11 +18,18 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameScreen implements Screen, InputProcessor {
     private User1 p1;
     private User2 p2;
+    private boolean isBuffSpawn, isP1AtkUp, isP1Armor, isP2AtkUp, isP2Armor = false;
+
+    private Buff buff;
+
+    private ArrayList<Buff> buffs = new ArrayList<Buff>();
+    private int buffTime;
     private Stage stage;
     private TextureAtlas atlas;
     private Skin skin;
@@ -54,6 +61,7 @@ public class GameScreen implements Screen, InputProcessor {
     private Sprite fightSprite;
     private Array<Sprite> platforms;
 
+
     private Sprite  platform;
 
     private AssetManager assetmanager;
@@ -80,6 +88,67 @@ public class GameScreen implements Screen, InputProcessor {
         p2.setY(100);
 
         fightSprite.setPosition(400, 300);
+
+        //Take Heal buff
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User1 user1) {
+                if (p1.getHP() <= 90){
+                    p1.setHP(p1.getHP()+10);
+                }
+                else {
+                    p1.setHP(100.0);
+                }
+
+            }
+        });
+
+
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User2 user2) {
+                if (p1.getHP() <= 90){
+                    p2.setHP(p2.getHP()+10);
+                }
+                else {
+                    p2.setHP(100.0);
+                }
+
+            }
+        });
+
+        //Take Attack Up Buff
+
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User1 user1) {
+                p1.setDmg(p1.getDmg()+10);
+            }
+        });
+
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User2 user2) {
+                p2.setDmg(p2.getDmg()+10);
+            }
+        });
+
+        //Take Armor Buff
+
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User1 user1) {
+                p2.setDmg(p2.getDmg()/2);
+            }
+        });
+        buffs.add(new Buff() {
+            @Override
+            void onTaken(User2 user2) {
+                p1.setDmg(p1.getDmg()/2);
+            }
+        });
+
+
 
         camera = new OrthographicCamera(1600, 900);
         camera.setToOrtho(true, 1600, 900);
@@ -335,6 +404,9 @@ public class GameScreen implements Screen, InputProcessor {
         bg = new Sprite(background);
     }
 
+
+
+
     @Override
     public void resize(int width, int height) {
 
@@ -390,5 +462,54 @@ public class GameScreen implements Screen, InputProcessor {
 
     public void setPlatform(Sprite platform) {
         this.platform = platform;
+    }
+
+    //Buff Spawn
+    public boolean isBuffSpawn(){
+        return isBuffSpawn();
+    }
+
+    public void setBuffSpawn(boolean buffSpawn){
+        isBuffSpawn = buffSpawn;
+    }
+
+    //Player 2 Buff
+    public boolean isP1AtkUp(){
+        return isP1AtkUp();
+    }
+
+    public void setP1AtkUp(boolean p1AtkUp){
+        isP1AtkUp = p1AtkUp;
+    }
+    public boolean isP1Armor(){
+        return isP1Armor;
+    }
+
+    public void setP1Armor(boolean p1Armor) {
+        isP1Armor = p1Armor;
+    }
+
+    //Player 2 Buff
+    public boolean isP2AtkUp(){
+        return isP2AtkUp();
+    }
+
+    public void setP2AtkUp(boolean p2AtkUp){
+        isP2AtkUp = p2AtkUp;
+    }
+    public boolean isP2Armor(){
+        return isP2Armor;
+    }
+
+    public void setP2Armor(boolean p2Armor) {
+        isP2Armor = p2Armor;
+    }
+
+    public Buff getBuff(){
+        return buff;
+    }
+
+    public void setBuff(Buff buff) {
+        this.buff = buff;
     }
 }
