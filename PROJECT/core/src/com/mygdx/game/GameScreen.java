@@ -42,11 +42,14 @@ public class GameScreen implements Screen, InputProcessor {
     private SpriteBatch batch;
     private Texture background;
     private BitmapFontCache mapText;
-    private Texture fight;
+    private Texture fight, HP_p1, HP_p2, p1_bar, p2_bar;
     private Music bgmusic;
     private Music fightmusic;
     private Music warCry1;
     private Music warCry2;
+
+    private Sprite  p1_hp, p2_hp, p1_border,p2_border;
+
 
     private long startTime = System.currentTimeMillis();
     private boolean isTextVisible = true;
@@ -88,6 +91,32 @@ public class GameScreen implements Screen, InputProcessor {
         p2.setY(100);
 
         fightSprite.setPosition(400, 300);
+
+        //HP bar
+        p1_bar = assetmanager.get("black rectangle.png");
+        p1_border = new Sprite(p1_bar);
+        p1_border.setPosition(100, 750);
+        p1_border.setSize(320, 35);
+        p1_border.setColor(Color.BLACK);
+
+        p2_bar = assetmanager.get("black rectangle.png");
+        p2_border = new Sprite(p2_bar);
+        p2_border.setPosition(1200, 750);
+        p2_border.setSize(320, 35);
+        p2_border.setColor(Color.BLACK);
+
+
+        HP_p1 = assetmanager.get("red rectangle.png");
+        p1_hp = new Sprite(HP_p1);
+        p1_hp.setPosition(93, 748);
+        p1_hp.setSize(328, 40);
+        p1_hp.setColor(Color.RED);
+
+        HP_p2 = new Texture("red rectangle.png");
+        p2_hp = new Sprite(HP_p2);
+        p2_hp.setPosition(1193, 748);
+        p2_hp.setSize(328, 40);
+        p2_hp.setColor(Color.RED);
 
         //Take Heal buff
         buffs.add(new Buff() {
@@ -368,6 +397,13 @@ public class GameScreen implements Screen, InputProcessor {
         }
         p1.draw(batch);
         p2.draw(batch);
+
+        p1_border.draw(batch);
+        p2_border.draw(batch);
+
+        p2_hp.draw(batch);
+        p1_hp.draw(batch);
+
         this.update();
 
         batch.end();
@@ -511,5 +547,69 @@ public class GameScreen implements Screen, InputProcessor {
 
     public void setBuff(Buff buff) {
         this.buff = buff;
+    }
+
+    public Texture getHP_p1() {
+        return HP_p1;
+    }
+
+    public void setHP_p1(Texture HP_p1) {
+        this.HP_p1 = HP_p1;
+    }
+
+    public Texture getHP_p2() {
+        return HP_p2;
+    }
+
+    public void setHP_p2(Texture HP_p2) {
+        this.HP_p2 = HP_p2;
+    }
+
+    public Sprite getP1_hp() {
+        return p1_hp;
+    }
+
+    public void setP1_hp(Sprite p1_hp) {
+        this.p1_hp = p1_hp;
+    }
+
+    public Sprite getP2_hp() {
+        return p2_hp;
+    }
+
+    public void setP2_hp(Sprite p2_hp) {
+        this.p2_hp = p2_hp;
+    }
+
+    public Texture getP1_bar() {
+        return p1_bar;
+    }
+
+    public void setP1_bar(Texture p1_bar) {
+        this.p1_bar = p1_bar;
+    }
+
+    public Texture getP2_bar() {
+        return p2_bar;
+    }
+
+    public void setP2_bar(Texture p2_bar) {
+        this.p2_bar = p2_bar;
+    }
+
+    public Sprite getP1_border() {
+        return p1_border;
+    }
+
+    public void setP1_border(Sprite p1_border) {
+        this.p1_border = p1_border;
+    }
+
+    public Sprite getP2_border() {
+        return p2_border;
+    }
+
+    public void setP2_border(Sprite p2_border) {
+        this.p2_border = p2_border;
     }
 }

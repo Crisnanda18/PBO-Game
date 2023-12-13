@@ -70,6 +70,10 @@ public class MyGdxGame extends Game implements InputProcessor {
         manager.load("Sprite2/Run.png", Texture.class);
         manager.load("Sprite2/Take Hit.png", Texture.class);
 
+        //load hp bar
+        manager.load("black rectangle.png", Texture.class);
+        manager.load("red rectangle.png", Texture.class);
+
         FileHandleResolver resolver = new InternalFileHandleResolver();
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
